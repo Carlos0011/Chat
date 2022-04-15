@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <ul id="mensagens"></ul>
+        <form id="form">
+            <input type="text" id="msg" autofocus autocomplete="off" placeholder="Digite Seu Nome">
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="status" style="margin-top: 50px;"></div>
+        <h1 id="user" style="margin-top: 20px;"></h1>
+        <form>
+            <button id="sair" type="submit" style="margin-right: 200px; margin-top: -30px;">Sair</button>
+        </form>
+        <ul id="lista" style="margin-right: 1000px; margin-top: -200px;"></ul>
+        <script>
+            $(function () {
+                const socket = io()// estabelece conexão websocket com servidor
+                socket.nickname = ''
+
+                // executa quando o formulário é submetido
+                $('#form').submit(function (evt) {
+
+                    // executa se o cliente estiver sem nome
+                    if (socket.nickname === '') {
+                        socket.nickname = $('#msg').val()// define nome do cliente
+                        socket.emit('login', socket.nickname)// envia nome do cliente ao servidor
+                        document.querySelector("#user").append(socket.nickname)
+                        document.querySelector("#msg").placeholder = "Digite Uma Mensagem"
+
+                        // executa quando alguma tecla for pressionada
+                        $('#msg').keydown(function (evt) {
+                            if ($('#status').val() == '') {
+                                // informa ao servidor que alguém esta digitando
+                                socket.emit('status', `${socket.nickname} está digitando...`)
+                            }
+                        })
+
+                        // executa após alguma tecla ter sido pressionada
+                        $('#msg').keyup(function (evt) {
+                            if ($('#msg').val() == '') {
+                                // informa ao servidor que o cliente parou de digitar
+                                socket.emit('status', '')
+                            }
+                        })
+
+                        // recebe mensagens da categoria status do servidor
+                        socket.on('status', function (msg) {
+                            // mostra na tela que alguém esta digitando
+                            $('#status').html(msg)
+                        })
+                    } else {
+                        // envia mensagem ao servidor
+                        socket.emit('chat msg', $('#msg').val())
+                    }
+
+                    $('#msg').val('')// limpa campo de texto
+                    return false// evita que o formulário seja enviado
+                })
+
+                $('#sair').click(function (evt) {
+                    socket.emit('logoff', socket.nickname)
+                })
+
+                // printa mensagens na tela
+                socket.on('chat msg', function (msg) {
+                    var str = JSON.stringify(msg)
+                    var name = str.substring(1, str.indexOf(':', 1))
+                    if (document.querySelector("#user").textContent == name) {
+                        str = str.substring(str.indexOf(':'), str.length - 1)
+                        $('#mensagens').append($('<li style="color: #7fffd4; margin-right: 500px">').text(`Você${str}`))
+                    } else {
+                        $('#mensagens').append($('<li style="margin-left: 500px">').text(msg))
+                    }
+                })
+
+                // atualiza lista de usuários online
+                socket.on('login/logoff', function (users) {
+                    $('#lista').html('')
+                    for (var n = 0; n < users.length; n++) {
+                        $('#lista').append($('<li>').text('- ' + users[n]))
+                    }
+                })
+            })
+        </script>
+    </header>
+</body>
+
+</html>

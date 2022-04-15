@@ -1,0 +1,100 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-image: url(fundo.jpg);
+  background-attachment: fixed;
+  background-size: 100%;
+}
+
+h1 {
+    border: 5px solid #DCDCDC;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    padding: 13px 30px;
+}
+
+ul {
+    border: 5px solid #DCDCDC;
+    margin-top: 20px;
+    color:white;
+    list-style: none;
+    font-size: 30px;
+    text-indent: 0em;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50px;
+    padding: 13px 30px;
+}
+
+ul li:before {
+    margin: 0 0.5em;
+}
+
+div {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50px;
+    font-style: italic;
+    font-size: 20px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+input:focus, button:focus {
+  outline: none;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  position: relative;
+}
+
+header * {
+  z-index: 1;
+}
+
+header h1 {
+  margin: 0 0 30px;
+}
+
+form {
+  top: 30px;
+  position: relative;
+  width: 500px;
+  max-width: 100%;
+}
+
+form input {
+  background: rgba(208, 208, 208, 0.7);
+  border: 0;
+  border-radius: 50px;
+  font-size: 16px;
+  padding: 15px 30px;
+  width: 100%;
+}
+
+form button {
+  position: absolute;
+  top: 2px;
+  right: 1px;
+  background-color: #10cce0;
+  border: 0;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 16px;
+  padding: 13px 30px;
+}
