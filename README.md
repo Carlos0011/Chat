@@ -1,6 +1,6 @@
 # Chat
 
-**Para Usar a Aplicação basta:**
+**Para Usar a Aplicação, basta:**
 
 **1 - executar o arquivo 'server.js'**
 
